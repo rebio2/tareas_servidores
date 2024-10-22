@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: grey;
+        }
+        h1{
+            color: black;
+        }
+        form{
+            background-color: white;
+            width: 30em;
+        }
+        label{
+            font-weight: bold; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Formulario de Jugador</h1>
+    <form action="index.php" method="post" enctype="multipart/form-data">
+        <label for="">Nombre:</label><br>
+        <input type="text" name="nombre" id="nombre" required><br>
+
+        <label for="">Alias:</label><br>
+        <input type="text" name="alias" id="alias" required><br>
+
+        <label for="">Edad:</label><br>
+        <input type="number" name="edad" id="edad" required><br>
+
+        <label for="">Armas a elegir (puedes elegir varias): </label><br>
+        <input type="checkbox" name="arma[]" value="maza">Maza <br>
+        <input type="checkbox" name="arma[]" value="antorcha">Antorcha <br>
+        <input type="checkbox" name="arma[]" value="martillo">Martillo <br>
+        <input type="checkbox" name="arma[]" value="latigo">Látigo <br>
+
+        <label for="">¿Practicas artes mágicas?</label><br>
+        <input type="radio" name="radio" value="si"> Sí <br>
+        <input type="radio" name="radio" value="no"> No <br>
+
+        <label for="">Subir imagen:</label>
+        <input type="hidden"  name="MAX_FILE_SIZE" value="10240">
+        <input type="file" name="archivo" id="archivo" accept="image/png"><br>
+
+        <input type="submit" name="enviar" id="enviar" value="Enviar">
+        <input type="submit" name="borrar" id="borrar" value="Borrar">
+     </form>
+</body>
+</html>
