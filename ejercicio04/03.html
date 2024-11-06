@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio3</title>
+    <style>
+         header {
+            background: blue;
+            text-align: center;
+            padding: 20px;
+            color: white;
+            padding: 20px;
+        }
+
+        h1 {
+            color: white;
+        }
+        body {
+            background-color: grey;
+            width: 500px;
+            align-items: center;
+            justify-content: center;
+            text-align: justify;
+        }
+        form{
+            background-color: white;
+        }
+        label{
+            color: grey;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>FORMULARIOS CON CONTROLES HTML5</h1>
+    </header>
+    <form action="./03.php">
+        <label for="">NUMERO 1 (number):</label>
+        <input type="number" name="num" id="num"><br><br>
+        <label for="">NUMERO 2 (range [10-100]):</label>
+        <input type="range" name="rango" id="rango" min="10" max="100"><br><br>
+        <label for="">Estaciones (list):</label>
+        <input type="text" name="est" id="est"><br><br>
+        <label for="">Color favorito (COLOR):</label>
+        <input type="color" name="color" id="color"><br><br>
+        <label for="">Buscar (search):</label>
+        <input type="text" name="search" id="search"><br><br>
+        <label for="">Nombre (text):</label>
+        <input type="text" name="name" id="name"><br><br>
+        <label for="">Apellido (text):</label>
+        <input type="text" name="ape" id="ape"><br><br>
+        <label for="">E-mail (email):</label>
+        <input type="text" name="email" id="email"><br><br>
+        <label for="">Fecha de nacimiento:</label>
+        <input type="date" name="date" id="date"><br><br>
+        <label for="">Edad (number)(de 0 a 150):</label>
+        <input type="number" name="num2" id="num2"  min="0" max="150"><br><br>
+        <label for="">Página personal (url):</label>
+        <input type="url" name="url" id="url"><br><br>
+        <label for="">Horario: De </label>
+        <input type="time" name="hora" id="hora">
+        <label for=""> a </label>
+        <input type="time" name="hora2" id="hora2"><br><br>
+        <input type="submit" name="enviar" id="enviar" value="Enviar consulta">
+
+    </form>
+</body>
+</html>

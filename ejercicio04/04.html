@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio4</title>
+    <style>
+        header {
+            background: blue;
+            text-align: center;
+            padding: 20px;
+            color: white;
+            text-shadow: black 0.1em 0.1em 0.2em;
+        }
+
+        h1 {
+            color: white;
+        }
+
+        body {
+            background-color: grey;
+            width: 500px;
+            align-items: center;
+            justify-content: center;
+            text-align: justify;
+
+        }
+        form{
+            background-color: white;
+            
+        }
+        label, h3, h5{
+            color: grey;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Formulario con múltiples campos</h1>
+    </header>
+    <form action="04.php" method="get">
+        <h3>Campos de text</h3>
+        <label for="">Nombre: </label>
+        <input type="text" value="nombre" name="nombre" >
+        <label for="">Contraseña: </label>
+        <input type="password" name="contraseña" value="contraseña">
+        <hr>
+        <h3>RADIO:</h3>
+        Rojo <input type="radio" name="radio" value="rojo"><br>
+        Naranja <input type="radio" name="radio" value="naranja"><br>
+        Verde <input type="radio" name="radio" value="verde"><br>
+        <hr>
+        <h3>CHECKBOX:</h3>
+        Quiero recibir publicidad <input type="checkbox" name="hola" value="publi">
+        <h3>MULTI CHECKBOX:</h3>
+        Inglés <input type="checkbox" name="check[]" value="ingles">
+        Francés <input type="checkbox" name="check[]" value="frances">
+        Alemán <input type="checkbox" name="check[]" value="aleman">
+        <hr>
+        <h3>SELECT:</h3>
+        <h5>Simple:</h5>
+        Año de finalización de estudios 
+        <select name="age">
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+        </select>
+        <h3>MULTIPLE:</h3>
+        Ciudades:
+        <select name="city[]" multiple>
+            <option value="33">Asturias</option>
+            <option value="17">Gerona</option>
+            <option value="28">Madrid</option>
+            <option value="41">Sevilla</option>
+        </select>
+        <hr>
+        <h3>TEXTAREA:</h3>
+        Escriba sus comentarios <textarea name="coment" id="coment" value="coment">Este formulario es muy completo</textarea>
+        <hr>
+        <h3>BOTONES:</h3>
+        <input type="reset" name="button" value="Resetear el formulario">
+        <input type="submit" name="button" value="Enviar formulario al servidor">
+
+
+    </form>
+</body>
+</html>

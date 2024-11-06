@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio5</title>
+    <style>
+        header {
+            background: blue;
+            text-align: center;
+            padding: 20px;
+            color: white;
+            text-shadow: black 0.1em 0.1em 0.2em;
+        }
+
+        h1 {
+            color: white;
+        }
+
+        body {
+            background-color: grey;
+            width: 500px;
+            align-items: center;
+            justify-content: center;
+            text-align: justify;
+
+        }
+
+        form {
+            background-color: white;
+
+        }
+
+        label,
+        h3,
+        h5 {
+            color: grey;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="05.php" method="post">
+        <header>
+            <h1>DATOS PERSONALES</h1>
+        </header>
+
+        <label for="">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" value="nombre"><br>
+
+        <label for="">Apellidos:</label>
+        <input type="text" id="apellidos" name="apellidos" value="apellidos"><br>
+
+        <label for="">Edad:</label>
+        <select id="edad" name="edad" value="edad">
+            <option value="menor">Menor de 55</option>
+            <option value="mayor">Mayor de 55</option>
+        </select><br>
+
+        <label for="">Sexo:</label>
+        <input type="radio" id="hombre" name="sexo" value="Hombre">
+        <label for="">Hombre</label>
+        <input type="radio" id="mujer" name="sexo" value="Mujer">
+        <label for="">Mujer</label><br>
+
+        <label for="">Hobbies:</label><br>
+
+        <input type="checkbox" value="lectura" name="hobbies[]">
+        <label for="">lectura</label><br>
+
+        <input type="checkbox" value="tele" name="hobbies[]">
+        <label for="">ver la tele</label><br>
+
+        <input type="checkbox" value="deporte" name="hobbies[]">
+        <label for="">hacer deporte</label><br>
+
+        <input type="checkbox" value="marcha" name="hobbies[]">
+        <label for="">Salir de marcha</label><br>
+
+        
+
+        <input type="submit" value="Enviar">
+    </form>
+</body>
+
+</html>
