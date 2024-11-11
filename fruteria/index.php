@@ -1,26 +1,29 @@
 <?php
 session_start();
+var_dump($_POST);
+$compraRealizada = "";
 
-// No hay cliente todavía
-if (!isset($_SESSION['cliente'])) {
+if (!isset($_GET['cliente'])) {
     require_once('bienvenida.php');
-    exit(); // Termina el programa
+    exit();
 }
-// Nuevo cliente: valores iniciales en la sesión
+
 if (isset($_GET['cliente'])) {
     $_SESSION['cliente'] = $_GET['cliente'];
     $_SESSION['pedidos'] = [];
-    exit(); // Termina el script
 }
 
-// Procesa las acciones
-if (isset($_POST["accion"])) {
+// Procesar la acción del formulario si se envía un POST
+if (isset($_POST['accion'])) {
+    $accion = $_POST['accion'];
+    
+    // Anotar fruta en el carrito
     if ($accion == "Anotar") {
-        $cantidad = (int)$_POST['cantidad'];
-        $fruta    = $_POST['fruta'];
+        $fruta = htmlspecialchars($_POST['fruta']);
+        $cantidad = $_POST['cantidad'];
 
+        // Validar la cantidad de fruta para agregar al carrito
         if ($cantidad > 0) {
-            // Si ya existe un pedido de fruta previo, acumula la cantidad
             if (isset($_SESSION['pedidos'][$fruta])) {
                 $_SESSION['pedidos'][$fruta] += $cantidad;
             } else {
@@ -29,37 +32,37 @@ if (isset($_POST["accion"])) {
         }
     }
 
-    // Anula la fruta
+    // Anular una fruta del carrito
     if ($accion == "Anular") {
-        unset($_SESSION['pedidos'][$_POST['fruta']]);
+        unset($_SESSION['pedidos'][$_POST["fruta"]]);
     }
 
-    // Muestra el pedido y cierra la sesión
+    // Finalizar pedido y mostrar resumen
     if ($accion == "Terminar") {
-        $compraRealizada = htmlTablaPedidos();
+        $compraRealizada = mostrarTablaPedidos();
         require_once("despedida.php");
         session_destroy();
-        exit;
+        exit();
     }
 }
 
-// Genera la tabla de pedidos y carga compra.php
-$compraRealizada = htmlTablaPedidos();
-require_once('compra.php');
+// Mostrar carrito actual en la página de compra
+$compraRealizada = mostrarTablaPedidos();
+require_once("compra.php");
 
-// Función auxiliar para generar una tabla HTML con los pedidos
-function htmlTablaPedidos(): string
+// Función para mostrar el contenido del carrito
+function mostrarTablaPedidos()
 {
-    $msg = "";
+    $mostrar = "";
     if (count($_SESSION['pedidos']) > 0) {
-        $msg .= "Este es su pedido :";
-        $msg .= "<table style='border: 1px solid black;'>";
+        $mostrar .= "<h2>Resumen de su pedido:</h2><table border='1'><tr><th>Fruta</th><th>Cantidad</th></tr>";
         foreach ($_SESSION['pedidos'] as $fruta => $cantidad) {
-            $msg .= "<tr><td><b>" . htmlspecialchars($fruta) . "</b></td><td>" . $cantidad . "</td></tr>";
+            $mostrar .= "<tr><td>$fruta</td><td>$cantidad</td></tr>";
         }
-        $msg .= "</table>";
+        $mostrar .= "</table>";
     } else {
-        $msg = "No hay productos en su carrito.";
+        $mostrar = "No hay productos en su carrito.";
     }
-    return $msg;
+    return $mostrar;
 }
+?>
