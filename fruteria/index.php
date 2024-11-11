@@ -3,14 +3,16 @@ session_start();
 var_dump($_POST);
 $compraRealizada = "";
 
-if (!isset($_GET['cliente'])) {
-    require_once('bienvenida.php');
-    exit();
-}
+
 
 if (isset($_GET['cliente'])) {
     $_SESSION['cliente'] = $_GET['cliente'];
     $_SESSION['pedidos'] = [];
+}
+
+if (!isset($_SESSION['cliente'])) {
+    require_once('bienvenida.php');
+    exit();
 }
 
 // Procesar la acción del formulario si se envía un POST
