@@ -3,8 +3,6 @@ session_start();
 
 $compraRealizada = "";
 
-
-
 if (isset($_GET['cliente'])) {
     $_SESSION['cliente'] = $_GET['cliente'];
     $_SESSION['pedidos'] = [];
