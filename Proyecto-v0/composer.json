@@ -1,0 +1,17 @@
+{
+    "name": "javie/proyecto-v0",
+    "autoload": {
+        "psr-4": {
+            "Javie\\ProyectoV0\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "rebio2",
+            "email": "javiersanchezocana4@gmail.com"
+        }
+    ],
+    "require": {
+        "mpdf/mpdf": "^8.0"
+    }
+}
