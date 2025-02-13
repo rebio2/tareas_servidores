@@ -2,6 +2,12 @@
 
 function crudBorrar($id)
 {
+    if ($_SESSION['user_role'] != 1) {
+        $_SESSION['msg'] = "No tienes permisos para realizar esta acción.";
+        header('Location: index.php');
+        exit();
+    }
+
     $db = AccesoDatos::getModelo();
     $resu = $db->borrarCliente($id);
     if ($resu) {
@@ -34,6 +40,12 @@ function crudDetalles($id)
 
 function crudModificar($id)
 {
+    if ($_SESSION['user_role'] != 1) {
+        $_SESSION['msg'] = "No tienes permisos para realizar esta acción.";
+        header('Location: index.php');
+        exit();
+    }
+
     $db = AccesoDatos::getModelo();
     $cli = $db->getCliente($id);
     $orden = "Modificar";
@@ -42,36 +54,41 @@ function crudModificar($id)
 
 function crudPostAlta()
 {
-    limpiarArrayEntrada($_POST); //Evito la posible inyección de código
+    limpiarArrayEntrada($_POST); // Evito la posible inyección de código
     $email = $_POST['email'];
-    $ip_address = $_POST['ip_address'];
     $telefono = $_POST['telefono'];
 
-    $validacion = validarDatos($email, $ip_address, $telefono);
-    if ($validacion !== true) {
-        $_SESSION['msg'] = $validacion;
-        return;
-    }
-
     $cli = new Cliente();
-    $cli->id            = $_POST['id'];
+    $cli->id            = $_POST['id']; // Asigna el primer ID disponible
     $cli->first_name    = $_POST['first_name'];
     $cli->last_name     = $_POST['last_name'];
     $cli->email         = $email;
     $cli->gender        = $_POST['gender'];
-    $cli->ip_address    = $ip_address;
     $cli->telefono      = $telefono;
+
     $db = AccesoDatos::getModelo();
+    $todoOK = true;
+
+    if (checkEmail($cli->email)) {
+        $todoOK = false;
+        echo "<p>El email ya existe</p>";
+    }
+
+    if (!checkTel($cli->telefono)) {
+        $todoOK = false;
+        echo "<p>El teléfono tiene un formato incorrecto</p>";
+    }
+
 
     if ($db->addCliente($cli)) {
         $subidaFoto = manejarSubidaFoto($cli->id);
         if ($subidaFoto !== true) {
             $_SESSION['msg'] = $subidaFoto;
         } else {
-            $_SESSION['msg'] = "El usuario " . $cli->first_name . " se ha dado de alta.";
+            $_SESSION['msg'] = "El usuario ha sido añadido.";
         }
     } else {
-        $_SESSION['msg'] = "Error al dar de alta al usuario " . $cli->first_name . ".";
+        $_SESSION['msg'] = "Error al añadir el usuario.";
     }
 }
 
@@ -82,12 +99,6 @@ function crudPostModificar()
     $ip_address = $_POST['ip_address'];
     $telefono = $_POST['telefono'];
 
-    $validacion = validarDatos($email, $ip_address, $telefono);
-    if ($validacion !== true) {
-        $_SESSION['msg'] = $validacion;
-        return;
-    }
-
     $cli = new Cliente();
     $cli->id            = $_POST['id'];
     $cli->first_name    = $_POST['first_name'];
@@ -98,6 +109,33 @@ function crudPostModificar()
     $cli->telefono      = $telefono;
     $db = AccesoDatos::getModelo();
 
+    $todoOK = true;
+
+    if (checkEmail($cli->email, $cli->id)) {
+        $todoOK = false;
+        echo "<p>El email ya existe</p>";
+    }
+
+    if (!checkIP($cli->ip_address)) {
+        $todoOK = false;
+        echo "<p>La IP tiene un formato incorrecto</p>";
+    }
+
+    if (!checkTel($cli->telefono)) {
+        $todoOK = false;
+        echo "<p>El teléfono tiene un formato incorrecto</p>";
+    }
+
+    $db = AccesoDatos::getModelo();
+
+    if ($todoOK) {
+        $db->modCliente($cli);
+        $_SESSION['msg'] = "El usuario ha sido modificado";
+    } else {
+        $orden = "Modificar";
+        include_once "app/views/formulario.php";
+    }
+
     if ($db->modCliente($cli)) {
         $subidaFoto = manejarSubidaFoto($cli->id);
         if ($subidaFoto !== true) {
@@ -105,8 +143,6 @@ function crudPostModificar()
         } else {
             $_SESSION['msg'] = "El usuario ha sido modificado.";
         }
-    } else {
-        $_SESSION['msg'] = "Error al modificar el usuario.";
     }
 }
 
@@ -140,32 +176,45 @@ function crudModificarAnterior($id)
     include_once "app/views/formulario.php";
 }
 
-function validarDatos($email, $ip_address, $telefono)
+function checkEmail($email, $id_excluir = null)
 {
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        return "Correo electrónico no válido.";
-    }
-
-    if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
-        return "Dirección IP no válida.";
-    }
-
-    if (!preg_match('/^\d{3}-\d{3}-\d{4}$/', $telefono)) {
-        return "Formato de teléfono no válido. Debe ser 999-999-9999.";
-    }
-
     $db = AccesoDatos::getModelo();
-    $clientes = $db->getClientes(0, $db->numClientes());
-    foreach ($clientes as $cliente) {
-        if ($cliente->email == $email) {
-            return "El correo electrónico ya está registrado.";
+    $cli = $db->buscarEmail($email);
+
+    if ($id_excluir && $cli && $cli->id == $id_excluir) {
+        return false;
+    } else {
+        if ($cli) {
+            return true;
+        } else {
+            return false;
         }
     }
-
-    return true;
 }
 
-function foto($id) {
+function checkIP($ip)
+{
+    $formato = true;
+    if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+        $formato = false;
+    }
+
+    return $formato;
+}
+
+function checkTel($tel)
+{
+    $formato = true;
+    $patron = "/^\d{3}-\d{3}-\d{4}$/";
+    if (!preg_match($patron, $tel)) {
+        $formato = false;
+    }
+
+    return $formato;
+}
+
+function foto($id)
+{
     $ruta = "app/uploads/0000000" . $id . ".jpg";
     if (file_exists($ruta)) {
         return  "<img src='$ruta' class='cliente-img' alt='Foto del usuario'>";
@@ -174,7 +223,8 @@ function foto($id) {
     }
 }
 
-function manejarSubidaFoto($id) {
+function manejarSubidaFoto($id)
+{
     if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
         $foto = $_FILES['foto'];
         $ext = pathinfo($foto['name'], PATHINFO_EXTENSION);
@@ -196,7 +246,8 @@ function manejarSubidaFoto($id) {
     return true;
 }
 
-function obtenerPaisPorIP($ip) {
+function obtenerPaisPorIP($ip)
+{
     $jsonIP = file_get_contents('http://ip-api.com/json/' . $ip);
     $jsonObjeto = json_decode($jsonIP);
 
@@ -209,12 +260,37 @@ function obtenerPaisPorIP($ip) {
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-function generarPDF($id) {
+function generarPDF($id)
+{
     $db = AccesoDatos::getModelo();
     $cli = $db->getCliente($id);
 
     if (!$cli) {
         return "Cliente no encontrado.";
+    }
+
+    // Obtener la foto
+    $fotoRuta = "app/uploads/0000000" . $id . ".jpg";
+    if (!file_exists($fotoRuta)) {
+        $fotoRuta = "https://robohash.org/$id"; // Foto por defecto
+    }
+
+    // Obtener la bandera del país
+    $codigoPais = obtenerPaisPorIP($cli->ip_address);
+    if ($codigoPais !== 'no disponible') {
+        $banderaURL = "https://flagcdn.com/w320/" . strtolower($codigoPais) . ".png";
+    } else {
+        $banderaURL = "https://via.placeholder.com/100x60?text=No+Flag";
+    }
+
+    // Obtener la geolocalización
+    $localizacion = obtenerLocalizacionPorIP($cli->ip_address);
+    if ($localizacion) {
+        $lat = $localizacion['lat'];
+        $lon = $localizacion['lon'];
+        $mapaURL = "https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lon&zoom=14&size=400x300&markers=color:red%7C$lat,$lon&key=YOUR_GOOGLE_MAPS_API_KEY";
+    } else {
+        $mapaURL = "https://via.placeholder.com/400x300?text=No+Map";
     }
 
     $tempDir = sys_get_temp_dir();
@@ -259,8 +335,35 @@ function generarPDF($id) {
             <td>Teléfono:</td>
             <td>' . htmlspecialchars($cli->telefono) . '</td>
         </tr>
+        <tr>
+            <td>Foto:</td>
+            <td><img src="' . $fotoRuta . '" width="100"></td>
+        </tr>
+        <tr>
+            <td>País:</td>
+            <td><img src="' . $banderaURL . '" width="100"></td>
+        </tr>
+        <tr>
+            <td>Mapa:</td>
+            <td><img src="' . $mapaURL . '" width="400" height="300"></td>
+        </tr>
     </table>';
 
     $mpdf->WriteHTML($html);
     $mpdf->Output('cliente_' . $cli->id . '.pdf', 'D');
+}
+
+function obtenerLocalizacionPorIP($ip)
+{
+    $jsonIP = file_get_contents('http://ip-api.com/json/' . $ip);
+    $jsonObjeto = json_decode($jsonIP);
+
+    if (isset($jsonObjeto->lat) && isset($jsonObjeto->lon)) {
+        return [
+            'lat' => $jsonObjeto->lat,
+            'lon' => $jsonObjeto->lon,
+        ];
+    } else {
+        return null;
+    }
 }

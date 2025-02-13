@@ -58,17 +58,17 @@ class AccesoDatos {
     public function getClientes ($primero,$cuantos):array {
         $tuser = [];
         // Crea la sentencia preparada
-       // echo "<h1> $primero : $cuantos  </h1>";
-        $stmt_usuarios  = $this->dbh->prepare("select * from Clientes limit $primero,$cuantos");
+        // echo "<h1> $primero : $cuantos  </h1>";
+        $stmt_usuarios  = $this->dbh->prepare("select * from Clientes " . $_SESSION['ordenacion'] . "limit $primero,$cuantos");
         // Si falla termina el programa
         $stmt_usuarios->setFetchMode(PDO::FETCH_CLASS, 'Cliente');
-    
-        if ( $stmt_usuarios->execute() ){
-            while ( $user = $stmt_usuarios->fetch()){
-               $tuser[]= $user;
+
+        if ($stmt_usuarios->execute()) {
+            while ($user = $stmt_usuarios->fetch()) {
+                $tuser[] = $user;
             }
         }
-                // Devuelvo el array de objetos
+        // Devuelvo el array de objetos
         return $tuser;
     }
     
@@ -87,29 +87,36 @@ class AccesoDatos {
         return $cli;
     }
 
-   public function getClienteSiguiente (int $id) {
+    public function getClienteSiguiente($id) {
+
         $cli = false;
-        $stmt_cli   = $this->dbh->prepare("select * from Clientes where id > :id limit 1");
+
+        $stmt_cli   = $this->dbh->prepare("select * from Clientes where id >? limit 1");
+        // Enlazo $id con el primer ? 
+        $stmt_cli->bindParam(1, $id);
         $stmt_cli->setFetchMode(PDO::FETCH_CLASS, 'Cliente');
-        $stmt_cli->bindParam(':id', $id);
-        if ( $stmt_cli->execute() ){
-             if ( $obj = $stmt_cli->fetch()){
-                $cli= $obj;
+        if ($stmt_cli->execute()) {
+            if ($obj = $stmt_cli->fetch()) {
+                $cli = $obj;
             }
         }
         return $cli;
     }
 
-    public function getClienteAnterior (int $id) {
+    public function getClienteAnterior($id) {
+
         $cli = false;
-        $stmt_cli   = $this->dbh->prepare("select * from Clientes where id < :id order by id desc limit 1");
+
+        $stmt_cli   = $this->dbh->prepare("select * from Clientes where id <? order by id DESC limit 1");
+        // Enlazo $id con el primer ? 
+        $stmt_cli->bindParam(1, $id);
         $stmt_cli->setFetchMode(PDO::FETCH_CLASS, 'Cliente');
-        $stmt_cli->bindParam(':id', $id);
-        if ( $stmt_cli->execute() ){
-             if ( $obj = $stmt_cli->fetch()){
-                $cli= $obj;
+        if ($stmt_cli->execute()) {
+            if ($obj = $stmt_cli->fetch()) {
+                $cli = $obj;
             }
         }
+
         return $cli;
     }
 
@@ -162,8 +169,34 @@ class AccesoDatos {
         $resu = ($stmt_boruser->rowCount () == 1);
         return $resu;
         
-    }   
+    }  
+
+    public function buscarEmail($email) {
+        $cli = false;
+
+        try {
+            $stmt_usuario = $this->dbh->prepare("SELECT * FROM Clientes WHERE email = :email");
+            $stmt_usuario->bindParam(':email', $email);
+
+            if ($stmt_usuario->execute()) {
+                $result = $stmt_usuario->fetch(PDO::FETCH_OBJ);
+                if ($result) {
+                    $cli = $result;
+                }
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+        return $cli;
+    }
     
+    public function getUserByLogin($login)
+    {
+        $stmt = $this->dbh->prepare("SELECT * FROM users WHERE login = ?");
+        $stmt->execute([$login]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     
      // Evito que se pueda clonar el objeto. (SINGLETON)
     public function __clone()

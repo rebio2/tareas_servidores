@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-01-2025 a las 10:48:09
+-- Tiempo de generación: 06-02-2025 a las 13:27:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -1044,25 +1044,52 @@ INSERT INTO `clientes` (`id`, `first_name`, `last_name`, `email`, `gender`, `ip_
 (999, 'Edwina', 'Colecrough', 'ecolecroughrq@homestead.com', 'Female', '32.202.153.188', '337-637-8832'),
 (1000, 'Carri', 'Dinse', 'cdinserr@networkadvertising.org', 'Female', '91.170.1.122', '876-398-8308');
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `login` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `rol` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`id`, `login`, `password`, `rol`) VALUES
+(1, 'admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 1),
+(2, 'usuario1', '12654c024a4c0926329753cf79d4bb95d617c17684066809cf453b2084a4d5bc', 0),
+(3, 'usuario2', 'd6e5afe89ed25da45a4f3783ac4d9d961511eca9009d59efc257ed2af94ce901', 0);
+
+-- admin password: admin123
+-- usuario1 password: userpass1
+-- usuario2 password: userpass2
+
 --
 -- Índices para tablas volcadas
 --
 
 --
--- Indices de la tabla `clientes`
+-- Indices de la tabla `users`
 --
-ALTER TABLE `clientes`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `login` (`login`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT de la tabla `clientes`
+-- AUTO_INCREMENT de la tabla `users`
 --
-ALTER TABLE `clientes`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1011;
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
