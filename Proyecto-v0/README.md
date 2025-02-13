@@ -1,30 +1,33 @@
-Documentación del Proyecto
-Mejoras Implementadas
+# Documentación del Proyecto
+
+## Mejoras Implementadas
+
 Se han realizado las siguientes mejoras en el sistema:
 
-Primera mejora implementada
-Segunda mejora implementada
-Tercera mejora implementada
-Cuarta mejora implementada
-Quinta mejora implementada
-Sexta mejora implementada
-Séptima mejora implementada
-Octava mejora implementada
-Novena mejora implementada
-Décima mejora implementada
+1. Primera mejora implementada
+2. Segunda mejora implementada
+3. Tercera mejora implementada
+4. Cuarta mejora implementada
+5. Quinta mejora implementada
+6. Sexta mejora implementada
+7. Séptima mejora implementada
+8. Octava mejora implementada
+9. Novena mejora implementada
+10. Décima mejora implementada
 
-Credenciales de Acceso
-Administrador
+## Credenciales de Acceso
 
-Usuario: admin
-Contraseña: admin123
+### Administrador
+| Usuario | Contraseña |
+|---------|------------|
+| admin   | admin123   |
 
-Usuario Regular 1
+### Usuarios Regulares
+| Usuario   | Contraseña |
+|-----------|------------|
+| usuario1  | userpass1  |
+| usuario2  | userpass2  |
 
-Usuario: usuario1
-Contraseña: userpass1
+---
 
-Usuario Regular 2
-
-Usuario: usuario2
-Contraseña: userpass2
+> **Nota de Seguridad**: Por razones de seguridad, se recomienda cambiar estas contraseñas después del primer inicio de sesión.
